@@ -17,15 +17,13 @@ clock = pygame.time.Clock()
 showntiles = []
 
 
-def map_gen(x, y, n):
+def map_gen(x, y, n):#generates map as a 2d list
     global bombs
     global bmap
     global map
     map = []
     bombs = []
     bmap = []
-    if n >= x * y:
-        print("dane nie maja sensu ")
 
     for i in range(x):
         row = []
@@ -48,18 +46,17 @@ print(x)
 map_gen(x, y, n)
 
 a = -1
-for i in bmap:
+for i in bmap: #creates a list of bombs' coordintes
     b = 0
     a += 1
     for j in i:
-
         if j == 'b':
-            bombss.append([a, b])
+            bombss.append([a, b]) 
         b += 1
 
 print(bombss)
 
-for i in bombss:  # numermaker
+for i in bombss:  # creates number indicating the ammount of mines/bombs in neighbourring tiles
     if not i[0] == 0 and not i[1] == 0 and not i[0] == (y - 1) and not i[1] == (x - 1):
         if not bmap[i[0] - 1][i[1] - 1] == 'b':
             bmap[i[0] - 1][i[1] - 1] += 1
@@ -184,12 +181,12 @@ class tile(object):
 
 
         else:
-            pygame.draw.rect(win, (127 * (self.x - 2 * (self.x // 2) + self.y - 2 * (self.y // 2)),
+            pygame.draw.rect(win, (127 * (self.x - 2 * (self.x // 2) + self.y - 2 * (self.y // 2)), #creates a visible crosword-word-puzzle-like shape so we can tell where are able to tell where given tiles are
                                    127 * (self.x - 2 * (self.x // 2) + self.y - 2 * (self.y // 2)),
                                    127 * (self.x - 2 * (self.x // 2) + self.y - 2 * (self.y // 2))),
                              (20 * self.x, 20 * self.y, 20, 20))
 
-    def odkryj(self):
+    def odkryj(self): #shows content of a given tile (number ot an image of a bomb(unless its flagged, then it just removes the flag) [i had to slow down the clock so the it could be possible to remove the flag without uncovering the contents of a tile}
         if self.isflagged == False:
             if self.ishid == True: self.ishid = False
 
@@ -213,7 +210,7 @@ for i in range(y):
 
 
 # print(fieldss)
-def redrawgamewindow():
+def redrawgamewindow(): #displays the whole thing
     for field in fields:
         field.draw(win)
 
@@ -226,72 +223,72 @@ while run:  # mainloop
     mouse = pygame.mouse.get_pos()
     click = pygame.mouse.get_pressed()
     if click[0] == 1:
-        showntiles.append([int(mouse[1] // 20), int(mouse[0] // 20)])
+        #showntiles.append([int(mouse[1] // 20), int(mouse[0] // 20)]) #doesn't work dunno why help!!!!
 
-        #fields[int((mouse[1] // 20) * x + (mouse[0] // 20))].odkryj()
+        fields[int((mouse[1] // 20) * x + (mouse[0] // 20))].odkryj() 
     if click[2] == 1:
         fields[int((mouse[1] // 20) * x + (mouse[0] // 20))].flagg()
 
-    for i in showntiles:
-        fields[i[0] * x + i[1]].odkryj()
-        if bmap[i[0]][i[1]] == 0:
-            if not i[0] == 0 and not i[1] == 0 and not i[0] == (y - 1) and not i[1] == (x - 1):
-                showntiles.append([i[0] - 1, i[1] - 1])        #ul
-                showntiles.append([i[0] - 1, i[1]])             #u
-                showntiles.append([i[0] - 1, i[1] + 1])           #ur
-                showntiles.append([i[0], i[1] - 1])                #ml
-                showntiles.append([i[0], i[1] + 1])                #mr
-                showntiles.append([i[0] + 1, i[1] - 1])              #dl
-                showntiles.append([i[0] + 1, i[1]])                 #d
-                showntiles.append([i[0] + 1, i[1] + 1])               #dr
+  #  for i in showntiles:                                               #well it crashes below here, but i dont know how to solve it    
+#        fields[i[0] * x + i[1]].odkryj()
+  #      if bmap[i[0]][i[1]] == 0:
+    #        if not i[0] == 0 and not i[1] == 0 and not i[0] == (y - 1) and not i[1] == (x - 1):
+       #         showntiles.append([i[0] - 1, i[1] - 1])        #ul
+    #            showntiles.append([i[0] - 1, i[1]])             #u
+       #         showntiles.append([i[0] - 1, i[1] + 1])           #ur
+       #         showntiles.append([i[0], i[1] - 1])                #ml
+         #       showntiles.append([i[0], i[1] + 1])                #mr
+        #        showntiles.append([i[0] + 1, i[1] - 1])              #dl
+        #        showntiles.append([i[0] + 1, i[1]])                 #d
+           #     showntiles.append([i[0] + 1, i[1] + 1])               #dr
 
-            elif i[0] == 0 and not i[1] == 0 and not i[1] == (x - 1):
-                showntiles.append([i[0], i[1] - 1])                #mu
-                showntiles.append([i[0], i[1] + 1])                #mr
-                showntiles.append([i[0] + 1, i[1] - 1])              #dl
-                showntiles.append([i[0] + 1, i[1]])                 #d
-                showntiles.append([i[0] + 1, i[1] + 1])               #dr
-            elif i[0] == 0 and i[1] == 0:
-                showntiles.append([i[0], i[1] + 1])                #mr
-                showntiles.append([i[0] + 1, i[1]])                 #d
-                showntiles.append([i[0] + 1, i[1] + 1])               #dr
-            elif not i[0] == 0 and i[1] == 0 and not i[0] == y - 1:
-                showntiles.append([i[0], i[1] - 1])                #mu
-                showntiles.append([i[0], i[1] + 1])                #mr
-                showntiles.append([i[0] + 1, i[1] - 1])              #dl
-                showntiles.append([i[0] + 1, i[1]])                 #d
-                showntiles.append([i[0] + 1, i[1] + 1])               #dr
-            elif i[0] == y and i[1] == 0:
-                showntiles.append([i[0], i[1] - 1])                #ml
-                showntiles.append([i[0] + 1, i[1] - 1])              #dl
-                showntiles.append([i[0] + 1, i[1]])                 #d
-            elif i[0] == (y - 1) and i[1] == 0:
-                showntiles.append([i[0] - 1, i[1]])             #u
-                showntiles.append([i[0] - 1, i[1] + 1])           #ur
-                showntiles.append([i[0], i[1] + 1])                #mr
-            elif i[0] == (y - 1) and not i[1] == 0 and not i[1] == (x - 1):
-                showntiles.append([i[0] - 1, i[1] - 1])        #ul
-                showntiles.append([i[0] - 1, i[1]])             #u
-                showntiles.append([i[0] - 1, i[1] + 1])           #ur
-                showntiles.append([i[0], i[1] - 1])                #ml
-                showntiles.append([i[0], i[1] + 1])                #mr
-            elif i[0] == (y - 1) and i[1] == (x - 1):
-                showntiles.append([i[0] - 1, i[1] - 1])        #ul
-                showntiles.append([i[0] - 1, i[1]])             #u
-                showntiles.append([i[0], i[1] - 1])                #ml
-            elif not i[0] == (y - 1) and not i[0] == 0 and i[1] == (x - 1):
-                showntiles.append([i[0] - 1, i[1] - 1])        #ul
-                showntiles.append([i[0] - 1, i[1]])             #u
-                showntiles.append([i[0], i[1] - 1])                #ml
-                showntiles.append([i[0] + 1, i[1]])                 #d
-                showntiles.append([i[0] + 1, i[1] + 1])               #dr
-            elif i[0] == y and i[1] == (x - 1):
-                showntiles.append([i[0], i[1] - 1])                #ml
-                showntiles.append([i[0] + 1, i[1] - 1])              #dl
-                showntiles.append([i[0] + 1, i[1]])                 #d  
-
-    showntiles = []
-    for event in pygame.event.get():
+        #    elif i[0] == 0 and not i[1] == 0 and not i[1] == (x - 1):
+       #         showntiles.append([i[0], i[1] - 1])                #mu
+        #        showntiles.append([i[0], i[1] + 1])                #mr
+        #        showntiles.append([i[0] + 1, i[1] - 1])              #dl
+           #     showntiles.append([i[0] + 1, i[1]])                 #d
+          #      showntiles.append([i[0] + 1, i[1] + 1])               #dr
+      #      elif i[0] == 0 and i[1] == 0:
+    #            showntiles.append([i[0], i[1] + 1])                #mr
+   #             showntiles.append([i[0] + 1, i[1]])                 #d
+    #            showntiles.append([i[0] + 1, i[1] + 1])               #dr
+     #       elif not i[0] == 0 and i[1] == 0 and not i[0] == y - 1:
+      #          showntiles.append([i[0], i[1] - 1])                #mu
+       #         showntiles.append([i[0], i[1] + 1])                #mr
+        #        showntiles.append([i[0] + 1, i[1] - 1])              #dl
+         #       showntiles.append([i[0] + 1, i[1]])                 #d
+          #      showntiles.append([i[0] + 1, i[1] + 1])               #dr
+           # elif i[0] == y and i[1] == 0:
+            #    showntiles.append([i[0], i[1] - 1])                #ml
+             #   showntiles.append([i[0] + 1, i[1] - 1])              #dl
+              #  showntiles.append([i[0] + 1, i[1]])                 #d
+ #           elif i[0] == (y - 1) and i[1] == 0:
+  #              showntiles.append([i[0] - 1, i[1]])             #u
+   #             showntiles.append([i[0] - 1, i[1] + 1])           #ur
+    #            showntiles.append([i[0], i[1] + 1])                #mr
+     #       elif i[0] == (y - 1) and not i[1] == 0 and not i[1] == (x - 1):
+      #          showntiles.append([i[0] - 1, i[1] - 1])        #ul
+       #         showntiles.append([i[0] - 1, i[1]])             #u
+        #        showntiles.append([i[0] - 1, i[1] + 1])           #ur
+         #       showntiles.append([i[0], i[1] - 1])                #ml
+          #      showntiles.append([i[0], i[1] + 1])                #mr
+           # elif i[0] == (y - 1) and i[1] == (x - 1):
+         #       showntiles.append([i[0] - 1, i[1] - 1])        #ul
+          #      showntiles.append([i[0] - 1, i[1]])             #u
+           #     showntiles.append([i[0], i[1] - 1])                #ml
+            #elif not i[0] == (y - 1) and not i[0] == 0 and i[1] == (x - 1):
+             #   showntiles.append([i[0] - 1, i[1] - 1])        #ul
+              #  showntiles.append([i[0] - 1, i[1]])             #u
+               # showntiles.append([i[0], i[1] - 1])                #ml
+                #showntiles.append([i[0] + 1, i[1]])                 #d
+  #              showntiles.append([i[0] + 1, i[1] + 1])               #dr
+   #         elif i[0] == y and i[1] == (x - 1):
+    #            showntiles.append([i[0], i[1] - 1])                #ml
+     #           showntiles.append([i[0] + 1, i[1] - 1])              #dl
+      #          showntiles.append([i[0] + 1, i[1]])                 #d  
+#
+ #   showntiles = []
+    for event in pygame.event.get(): #makes the X button kill the program 
         if event.type == pygame.QUIT:
             run = False
     clock.tick(10)
